@@ -463,6 +463,7 @@ cc_library(
     hdrs = glob(
         [
             "include/llvm/*.h",
+            "include/llvm/ABI/*.h",
             "include/llvm/IR/*.h",
         ],
         exclude = ["include/llvm/LinkAllPasses.h"],
@@ -1088,6 +1089,7 @@ cc_library(
     hdrs = glob(
         [
             "include/llvm/*.h",
+            "include/llvm/ABI/*.h",
             "include/llvm/IR/*.h",
         ],
         exclude = ["include/llvm/LinkAllPasses.h"],
