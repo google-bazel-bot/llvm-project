@@ -2048,6 +2048,31 @@ cc_library(
 )
 
 cc_library(
+    name = "analysis_scalable",
+    srcs = glob([
+        "lib/Analysis/Scalable/**/*.cpp",
+        "lib/Analysis/Scalable/**/*.h",
+    ]),
+    hdrs = glob([
+        "include/clang/Analysis/Scalable/**/*.h",
+    ]),
+    textual_hdrs = glob([
+        "include/clang/Analysis/Scalable/**/*.def",
+    ]),
+    includes = ["include"],
+    deps = [
+        ":ast",
+        ":ast_matchers",
+        ":basic",
+        ":frontend",
+        ":index",
+        ":lex",
+        ":support",
+        "//llvm:Support",
+    ],
+)
+
+cc_library(
     name = "frontend_tool",
     srcs = glob([
         "lib/FrontendTool/*.cpp",
@@ -2055,6 +2080,7 @@ cc_library(
     hdrs = glob(["include/clang/FrontendTool/*.h"]),
     includes = ["include"],
     deps = [
+        ":analysis_scalable",
         ":basic",
         ":codegen",
         ":config",
