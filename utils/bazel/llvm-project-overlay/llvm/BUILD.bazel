@@ -403,6 +403,18 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "SupportHTTP",
+    srcs = glob([
+        "lib/Support/HTTP/*.cpp",
+    ]),
+    copts = llvm_copts,
+    deps = [
+        ":Support",
+        ":config",
+    ],
+)
+
 # Note: although FileCheck (the binary) is a test utility, some non-test
 # targets depend on the FileCheck library target.
 cc_library(
