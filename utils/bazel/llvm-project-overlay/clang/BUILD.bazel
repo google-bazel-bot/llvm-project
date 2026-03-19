@@ -1365,18 +1365,8 @@ cc_library(
 
 cc_library(
     name = "dependency_scanning",
-    srcs = glob([
-        "lib/DependencyScanning/**/*.cpp",
-    ]),
-    hdrs = glob(["include/clang/DependencyScanning/**/*.h"]),
     deps = [
-        ":basic",
         ":driver",
-        ":frontend",
-        ":lex",
-        ":serialization",
-        "//llvm:Support",
-        "//llvm:TargetParser",
     ],
 )
 
@@ -1577,6 +1567,7 @@ cc_library(
     name = "driver",
     srcs = glob(
         [
+            "lib/DependencyScanning/**/*.cpp",
             "lib/Driver/*.cpp",
             "lib/Driver/ToolChains/*.cpp",
             "lib/Driver/ToolChains/*.h",
@@ -1588,6 +1579,7 @@ cc_library(
         ],
     ),
     hdrs = glob([
+        "include/clang/DependencyScanning/**/*.h",
         "include/clang/Driver/*.h",
     ]),
     copts = ["$(STACK_FRAME_UNLIMITED)"],
