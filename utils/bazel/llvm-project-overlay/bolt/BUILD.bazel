@@ -66,7 +66,10 @@ cc_binary(
     srcs = glob([
         "tools/driver/*.cpp",
     ]),
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         ":Profile",
         ":Rewrite",
@@ -93,7 +96,10 @@ cc_library(
     hdrs = glob([
         "include/bolt/Rewrite/*.h",
     ]),
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         ":Core",
         ":Passes",
@@ -136,7 +142,10 @@ cc_library(
         "lib/RuntimeLibs/*.cpp",
     ]),
     defines = ["CMAKE_INSTALL_FULL_LIBDIR=\\\"\\\""],
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     textual_hdrs = glob([
         "include/bolt/RuntimeLibs/*.h",
     ]) + ["include/bolt/RuntimeLibs/RuntimeLibraryVariables.inc"],
@@ -158,11 +167,24 @@ cc_library(
     ],
 )
 
+genrule(
+    name = "patch_data_aggregator",
+    srcs = ["include/bolt/Profile/DataAggregator.h"],
+    outs = ["patched/bolt/Profile/DataAggregator.h"],
+    cmd = "mkdir -p $$(dirname $@) && sed 's|std::unordered_map<std::pair<StringRef, StringRef>, uint64_t> CrossDSOSamples;|struct PairHash { size_t operator()(const std::pair<StringRef, StringRef> \\&P) const { return hash_combine(P.first, P.second); } }; std::unordered_map<std::pair<StringRef, StringRef>, uint64_t, PairHash> CrossDSOSamples;|' $(location include/bolt/Profile/DataAggregator.h) > $@",
+)
+
 cc_library(
     name = "ProfileHeaders",
-    hdrs = glob(["include/bolt/Profile/*.h"]),
+    hdrs = glob(
+        ["include/bolt/Profile/*.h"],
+        exclude = ["include/bolt/Profile/DataAggregator.h"],
+    ) + [":patch_data_aggregator"],
     features = ["-parse_headers"],  # Otherwise would cause circular dependency
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     visibility = ["//visibility:private"],
 )
 
@@ -171,10 +193,16 @@ cc_library(
     srcs = glob([
         "lib/Profile/*.cpp",
     ]),
-    hdrs = glob([
-        "include/bolt/Profile/*.h",
-    ]),
-    includes = ["include"],
+    hdrs = glob(
+        [
+            "include/bolt/Profile/*.h",
+        ],
+        exclude = ["include/bolt/Profile/DataAggregator.h"],
+    ) + [":patch_data_aggregator"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         ":Core",
         ":Passes",
@@ -205,7 +233,10 @@ cc_library(
         # To avoid circular dependency on "Profile".
         "include/bolt/Profile/BoltAddressTranslation.h",
     ],
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         ":Core",
         ":Utils",
@@ -233,7 +264,10 @@ cc_library(
     hdrs = glob([
         "lib/Target/X86/*.h",
     ]),
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         ":Core",
         "//llvm:Analysis",
@@ -259,7 +293,10 @@ cc_library(
         "lib/Target/AArch64/*.cpp",
     ]),
     hdrs = ["lib/Target/AArch64/AArch64MCSymbolizer.h"],
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         ":Core",
         ":Utils",
@@ -291,7 +328,10 @@ cc_library(
         "include/bolt/Passes/*.h",
         "include/bolt/Rewrite/*.h",
     ]),
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         ":ProfileHeaders",
         ":Utils",
@@ -326,7 +366,10 @@ cc_library(
     ] + glob([
         "include/bolt/Utils/*.h",
     ]),
-    includes = ["include"],
+    includes = [
+        "include",
+        "patched",
+    ],
     deps = [
         "//llvm:Analysis",
         "//llvm:BinaryFormat",
