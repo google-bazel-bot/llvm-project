@@ -1635,6 +1635,7 @@ cc_library(
         ":lex",
         ":options",
         ":parse",
+        ":scalable_static_analysis_analyses",
         ":scalable_static_analysis_core",
         ":scalable_static_analysis_frontend",
         ":serialization",
@@ -2106,6 +2107,7 @@ cc_library(
         ":frontend",
         ":frontend_rewrite",
         ":options",
+        ":scalable_static_analysis_analyses",
         ":scalable_static_analysis_core",
         ":scalable_static_analysis_frontend",
         ":static_analyzer_frontend",
@@ -2679,6 +2681,7 @@ cc_binary(
     srcs = ["tools/clang-ssaf-format/SSAFFormat.cpp"],
     deps = [
         ":basic",
+        ":scalable_static_analysis_analyses",
         ":scalable_static_analysis_core",
         ":scalable_static_analysis_tool",
         "//llvm:Option",
@@ -2691,6 +2694,7 @@ cc_binary(
     srcs = ["tools/clang-ssaf-linker/SSAFLinker.cpp"],
     deps = [
         ":basic",
+        ":scalable_static_analysis_analyses",
         ":scalable_static_analysis_core",
         ":scalable_static_analysis_tool",
         "//llvm:Option",
